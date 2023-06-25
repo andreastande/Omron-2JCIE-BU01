@@ -21,6 +21,7 @@ info2 = s.latest_calculation_data()
 info3 = s.latest_acceleration_status()
 dt = datetime.now(CurrentTZ)
 
+'''
 print("================================================")
 print(f" Model               : {dev.model}")
 print(f" Serial              : {dev.serial}")
@@ -44,11 +45,15 @@ print(f" SI value            : {info.si} kine")
 print(f" PGA                 : {info.pga} gal")
 print(f" Seismic intensity   : {info.seismic_intensity}")
 print("================================================")
+'''
 
 print(f" Acceleration X   : {info2.acc_x}")
 print(f" Acceleration Y   : {info2.acc_y}")
 print(f" Acceleration Z   : {info2.acc_z}")
 
+
+'''
 print(f" Max Acceleration X   : {info3.max_acc_x}")
 print(f" Max Acceleration Y   : {info3.max_acc_y}")
 print(f" Max Acceleration Z   : {info3.max_acc_z}")
+'''
