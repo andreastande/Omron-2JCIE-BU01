@@ -81,6 +81,12 @@ class Omron2JCIE_BU01(object):
         # - rule: Display rule -- See Table 105
         # - rgb:  Intensity of LED(RGB) -- tuple(red, green, blue)
         cur = self.get(0x5111)
+        if not rule and not rgb: return cur
+        if rule is None: rule = cur.rule
+        if rgb: red, green, blue = rgb
+        else: red, green, blue = cur.red, cur.green, cur.blue
+        data = struct.pack("<HBBB", rule, red, green, blue)
+        return self.get(0x5111, data)
         
 
     def advertise_setting(self, interval=None, mode=None):
