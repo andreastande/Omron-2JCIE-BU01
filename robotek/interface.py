@@ -16,6 +16,8 @@ myLabel = Label(root, text="Omron 2JCIE-BU01", font="Futura 18")
 
 myLabel.place(relx=0.5, rely=0.1, anchor=CENTER)
 
+counter3 = 0
+
 class Worker(threading.Thread):
     def __init__(self):
         super(Worker, self).__init__()
@@ -25,16 +27,23 @@ class Worker(threading.Thread):
     def run(self):
         self.run_event.wait()
 
-        s.led(0x01, (0, 255, 0))
+        global counter3
+        if counter3 == 0:
+            s.led(0x01, (0, 255, 0))
         # info3 = s.latest_acceleration_status()
         prev_time = ""
         prev_acc_x = 0
         prev_acc_y = 0
         prev_acc_z = 0
+        global counter
         counter = 0
         counter2 = 0
 
-        while self.run_event.is_set():
+        while self.run_event.is_set() and counter3 == 0:
+            global worker_thread
+            global run_program
+            run_program = True
+            print(worker_thread.is_alive())
             if counter2 > 0:
                 counter2 -= 1
             dt = datetime.now()
@@ -91,7 +100,8 @@ class Worker(threading.Thread):
 
             asyncio.run(sleep_until(future_time[0], future_time[1], future_time[2]))
 
-        s.led(0x00, (255, 0, 0))
+        counter3 = 0
+
 
 async def sleep_until(hour: int, minute: int, second: int):
         """Asynchronous wait until specific hour, minute and second
@@ -110,26 +120,50 @@ async def sleep_until(hour: int, minute: int, second: int):
 
 worker_thread = Worker()
 worker_thread.start()
+counter = 0
+run_program = False
 
 def turn_on_led():
     global worker_thread
+    global counter
     worker_thread.run_event.set()
     if not worker_thread.is_alive():
         worker_thread = Worker()
-        worker_thread.run_event.set()
+        counter = 0
         worker_thread.start()
+        worker_thread.run_event.set()
     print("Program starter")
     
 def turn_off_led():
     global worker_thread
+    global counter
+    global run_program
+    global counter3
+    if not run_program:
+        counter3 = 1
+        worker_thread.run_event.set()
+        s.led(0x00, (255, 0, 0))
+        print("Stopper program midlertidig, aldri kjørt")
+        return
     worker_thread.run_event.clear()
+    s.led(0x00, (255, 0, 0))
+    counter = 0
     print("Stopper program midlertidig")
 
 def exit():
     global worker_thread
+    global run_program
+    global counter3
+    if not run_program:
+        counter3 = 1
+        worker_thread.run_event.set()
+        print("Program avsluttes")
+        sys.exit(0)
+    print(worker_thread.is_alive())
     if worker_thread.is_alive():
         worker_thread.run_event.clear()
     print("Program avsluttes")
+    s.led(0x00, (255, 0, 0))
     sys.exit(0)
 
     
