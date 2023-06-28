@@ -118,10 +118,20 @@ def turn_on_led():
         worker_thread = Worker()
         worker_thread.run_event.set()
         worker_thread.start()
+    print("Program starter")
     
 def turn_off_led():
     global worker_thread
     worker_thread.run_event.clear()
+    print("Stopper program midlertidig")
+
+def exit():
+    global worker_thread
+    if worker_thread.is_alive():
+        worker_thread.run_event.clear()
+    print("Program avsluttes")
+    sys.exit(0)
+
     
 
 turn_on = Button(root, text="ON", command=turn_on_led)
@@ -132,13 +142,20 @@ turn_off = Button(root, text="OFF", command=turn_off_led)
 turn_off.config(width="15", height="2")
 turn_off.place(relx=0.6, rely=0.3)
 
+exit_func = Button(root, text="EXIT", command=exit)
+exit_func.config(width="15", height="2")
+exit_func.place(relx=0.1, rely=0.9)
 
 
 
 
+
+
+'''
 ico = Image.open('icon.ico')
 photo = ImageTk.PhotoImage(ico)
 root.wm_iconphoto(False, photo)
+'''
 
 root.title("Omron 2JCIE-BU01")
 
