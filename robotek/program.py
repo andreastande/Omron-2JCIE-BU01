@@ -3,6 +3,8 @@ from datetime import datetime, timedelta, tzinfo
 from omron_2jcie_bu01_interact import Omron2JCIE_BU01
 import asyncio
 import atexit
+import keyboard
+import sys
 
 s = Omron2JCIE_BU01.serial("COM3")
 s.led(0x01, (0, 255, 0))
@@ -84,5 +86,9 @@ while True:
 
     if datetime.now().strftime('%H:%M:%S').split(":") == future_time:
         continue
+
+    if keyboard.is_pressed('ctrl') and keyboard.is_pressed('c'):
+        turn_off_led()
+        sys.exit(0)
 
     asyncio.run(sleep_until(future_time[0], future_time[1], future_time[2]))
