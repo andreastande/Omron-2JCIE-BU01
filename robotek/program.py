@@ -2,6 +2,7 @@ import time
 from datetime import datetime, timedelta, tzinfo
 from omron_2jcie_bu01_interact import Omron2JCIE_BU01
 import asyncio
+import atexit
 
 s = Omron2JCIE_BU01.serial("COM3")
 s.led(0x01, (0, 255, 0))
@@ -12,6 +13,12 @@ prev_acc_y = 0
 prev_acc_z = 0
 counter = 0
 counter2 = 0
+
+def turn_off_led():
+    s.led(0x00, (255, 255, 0))
+
+if (__name__ == "__main__"):
+    atexit.register(turn_off_led)
 
 async def sleep_until(hour: int, minute: int, second: int):
     """Asynchronous wait until specific hour, minute and second
