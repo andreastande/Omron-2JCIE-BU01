@@ -47,10 +47,11 @@ while True:
     acc_y = abs(info.acc_y)
     acc_z = abs(info.acc_z)
 
-    print(f'''
-    Forrige målinger:        {prev_acc_x}, {prev_acc_y}, {prev_acc_z}
-    Nåværende målinger:      {acc_x}, {acc_y}, {acc_z}
-    ''')
+    
+    # print(f'''
+    # Forrige målinger:        {prev_acc_x}, {prev_acc_y}, {prev_acc_z}
+    # Nåværende målinger:      {acc_x}, {acc_y}, {acc_z}
+    # ''')
 
     if counter == 0:
         prev_acc_x = acc_x
