@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-import sys
-sys.path.insert(0, "../lib-ext")
-sys.path.insert(0, "..")
 
 import time
 from datetime import datetime, timedelta, tzinfo
-from omron_2jcie_bu01 import Omron2JCIE_BU01
+from omron import Omron2JCIE_BU01
 
 CurrentTZ = type(time.tzname[0], (tzinfo,), {
     "tzname": lambda self, dt: time.tzname[0],

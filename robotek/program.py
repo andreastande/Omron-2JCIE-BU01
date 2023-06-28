@@ -1,14 +1,10 @@
-#!/usr/bin/env python3
-import sys
-sys.path.insert(0, "../lib-ext")
-sys.path.insert(0, "..")
-
 import time
 from datetime import datetime, timedelta, tzinfo
-from omron_2jcie_bu01 import Omron2JCIE_BU01
+from omron import Omron2JCIE_BU01
 import asyncio
 
 s = Omron2JCIE_BU01.serial("COM3")
+s.led(0x01, (0, 255, 0))
 # info3 = s.latest_acceleration_status()
 prev_time = ""
 prev_acc_x = 0
@@ -54,22 +50,18 @@ while True:
         counter += 1
         continue
 
-    if abs(acc_x - prev_acc_x) > 400:
+    if abs(acc_x - prev_acc_x) > 400 or abs(acc_y - prev_acc_y) > 400:
         s.led(0x01, (255, 0, 0))
         counter2 = 10
     else:
         if counter2 == 0:
             s.led(0x01, (0, 255, 0))
 
-
-    
     prev_time = datetime.now().strftime('%H:%M:%S')
     prev_acc_x = acc_x
     prev_acc_y = acc_y
     prev_acc_z = acc_z
  
-
-
     time_now_list = time_now.split(":")
     future_time = []
     if int(time_now_list[2]) == 59:
@@ -82,6 +74,9 @@ while True:
             future_time = [int(time_now_list[0]), int(time_now_list[1]) + 1, int(0)]
     else:
         future_time = [int(time_now_list[0]), int(time_now_list[1]), int(time_now_list[2]) + 1]
+
+    if datetime.now().strftime('%H:%M:%S').split(":") == future_time:
+        continue
 
     asyncio.run(sleep_until(future_time[0], future_time[1], future_time[2]))
 

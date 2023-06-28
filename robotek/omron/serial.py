@@ -3,7 +3,7 @@
 import struct
 from collections import namedtuple
 from serial import Serial
-from omron_2jcie_bu01.__init__ import Omron2JCIE_BU01, DataParser
+from omron import Omron2JCIE_BU01, DataParser
 
 class Omron2JCIE_BU01_Serial(Omron2JCIE_BU01):
     # Operate OMRON 2JCIE-BU01 via serial

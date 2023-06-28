@@ -59,7 +59,7 @@ class Omron2JCIE_BU01(object):
 
     @classmethod
     def serial(cls, portname):
-        from omron_2jcie_bu01.serial import Omron2JCIE_BU01_Serial
+        from .serial import Omron2JCIE_BU01_Serial
         return Omron2JCIE_BU01_Serial(portname)
 
     @classmethod
