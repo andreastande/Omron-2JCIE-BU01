@@ -2,7 +2,7 @@
 
 import time
 from datetime import datetime, timedelta, tzinfo
-from omron import Omron2JCIE_BU01
+from omron_2jcie_bu01_interact import Omron2JCIE_BU01
 
 CurrentTZ = type(time.tzname[0], (tzinfo,), {
     "tzname": lambda self, dt: time.tzname[0],

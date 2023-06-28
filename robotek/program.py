@@ -1,6 +1,6 @@
 import time
 from datetime import datetime, timedelta, tzinfo
-from omron import Omron2JCIE_BU01
+from omron_2jcie_bu01_interact import Omron2JCIE_BU01
 import asyncio
 
 s = Omron2JCIE_BU01.serial("COM3")
@@ -79,23 +79,3 @@ while True:
         continue
 
     asyncio.run(sleep_until(future_time[0], future_time[1], future_time[2]))
-
-
-
-
-
-
-
-
-
-'''
-print(f"\n Date                : {dt.strftime('%H:%M:%S')} \n")
-
-print(f" Acceleration X   : {info2.acc_x}")
-print(f" Acceleration Y   : {info2.acc_y}")
-print(f" Acceleration Z   : {info2.acc_z} \n")
-
-print(f" Max Acceleration X   : {info3.max_acc_x}")
-print(f" Max Acceleration Y   : {info3.max_acc_y}")
-print(f" Max Acceleration Z   : {info3.max_acc_z}")
-'''

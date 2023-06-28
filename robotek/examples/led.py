@@ -1,4 +1,4 @@
-from omron import Omron2JCIE_BU01
+from omron_2jcie_bu01_interact import Omron2JCIE_BU01
 
 s = Omron2JCIE_BU01.serial("COM3")
 #s = Omron2JCIE_BU01.serial("/dev/ttyUSB0")
