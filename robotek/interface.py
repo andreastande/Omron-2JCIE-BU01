@@ -11,10 +11,10 @@ import threading
 s = Omron2JCIE_BU01.serial("COM3")
 
 root = Tk()
+root.iconify()
 
-myLabel = Label(root, text="Omron 2JCIE-BU01", font="Futura 18")
-
-myLabel.place(relx=0.5, rely=0.1, anchor=CENTER)
+myLabel = Label(root, text="Lukk vinduet for å \n skru av Omron-sensor", font="Futura 15")
+myLabel.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 counter3 = 0
 
@@ -94,10 +94,6 @@ class Worker(threading.Thread):
             if datetime.now().strftime('%H:%M:%S').split(":") == future_time:
                 continue
 
-            if keyboard.is_pressed('ctrl') and keyboard.is_pressed('c'):
-                turn_off_led()
-                sys.exit(0)
-
             asyncio.run(sleep_until(future_time[0], future_time[1], future_time[2]))
 
         counter3 = 0
@@ -118,38 +114,6 @@ async def sleep_until(hour: int, minute: int, second: int):
             future += timedelta(days=1)
         await asyncio.sleep((future - t).total_seconds())
 
-worker_thread = Worker()
-worker_thread.start()
-counter = 0
-run_program = False
-
-def turn_on_led():
-    global worker_thread
-    global counter
-    worker_thread.run_event.set()
-    if not worker_thread.is_alive():
-        worker_thread = Worker()
-        counter = 0
-        worker_thread.start()
-        worker_thread.run_event.set()
-    print("Program starter")
-    
-def turn_off_led():
-    global worker_thread
-    global counter
-    global run_program
-    global counter3
-    if not run_program:
-        counter3 = 1
-        worker_thread.run_event.set()
-        s.led(0x00, (255, 0, 0))
-        print("Stopper program midlertidig, aldri kjørt")
-        return
-    worker_thread.run_event.clear()
-    s.led(0x00, (255, 0, 0))
-    counter = 0
-    print("Stopper program midlertidig")
-
 def exit():
     global worker_thread
     global run_program
@@ -167,28 +131,18 @@ def exit():
     s.led(0x00, (255, 0, 0))
     sys.exit(0)
 
-turn_on = Button(root, text="ON", command=turn_on_led)
-turn_on.config(width="15", height="2")
-turn_on.place(relx=0.3, rely=0.3)
-
-turn_off = Button(root, text="OFF", command=turn_off_led)
-turn_off.config(width="15", height="2")
-turn_off.place(relx=0.6, rely=0.3)
-
-'''
-exit_func = Button(root, text="EXIT", command=exit)
-exit_func.config(width="15", height="2")
-exit_func.place(relx=0.1, rely=0.9)
-'''
-
+worker_thread = Worker()
+worker_thread.start()
+worker_thread.run_event.set()
+print("Program starter")
+run_program = False
 
 ico = Image.open(r"C:\icon.ico")
 photo = ImageTk.PhotoImage(ico)
 root.wm_iconphoto(False, photo)
 
 root.title("Omron 2JCIE-BU01")
-
-root.geometry("800x500")
+root.geometry("300x150")
 
 root.protocol("WM_DELETE_WINDOW", exit)
 
