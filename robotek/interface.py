@@ -157,6 +157,7 @@ def exit():
     if not run_program:
         counter3 = 1
         worker_thread.run_event.set()
+        s.led(0x00, (255, 0, 0))
         print("Program avsluttes")
         sys.exit(0)
     print(worker_thread.is_alive())
@@ -166,8 +167,6 @@ def exit():
     s.led(0x00, (255, 0, 0))
     sys.exit(0)
 
-    
-
 turn_on = Button(root, text="ON", command=turn_on_led)
 turn_on.config(width="15", height="2")
 turn_on.place(relx=0.3, rely=0.3)
@@ -176,23 +175,21 @@ turn_off = Button(root, text="OFF", command=turn_off_led)
 turn_off.config(width="15", height="2")
 turn_off.place(relx=0.6, rely=0.3)
 
+'''
 exit_func = Button(root, text="EXIT", command=exit)
 exit_func.config(width="15", height="2")
 exit_func.place(relx=0.1, rely=0.9)
-
-
-
-
-
-
 '''
-ico = Image.open('icon.ico')
+
+
+ico = Image.open(r"C:\icon.ico")
 photo = ImageTk.PhotoImage(ico)
 root.wm_iconphoto(False, photo)
-'''
 
 root.title("Omron 2JCIE-BU01")
 
 root.geometry("800x500")
+
+root.protocol("WM_DELETE_WINDOW", exit)
 
 root.mainloop()
