@@ -91,7 +91,13 @@ class Worker(threading.Thread):
             else:
                 future_time = [int(time_now_list[0]), int(time_now_list[1]), int(time_now_list[2]) + 1]
 
-            if datetime.now().strftime('%H:%M:%S').split(":") == future_time:
+            time_now_list_2 = datetime.now().strftime('%H:%M:%S').split(":")
+            time_now_list_2_int = [int(tall) for tall in time_now_list_2]
+            
+            print(f"Tid nå: {time_now_list_2_int}")
+            print(f"Tid sove: {future_time}")
+
+            if time_now_list_2_int == future_time:
                 continue
 
             asyncio.run(sleep_until(future_time[0], future_time[1], future_time[2]))
