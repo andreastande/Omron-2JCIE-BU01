@@ -7,6 +7,14 @@ import keyboard
 import sys
 from datetime import datetime, timedelta, tzinfo
 import threading
+import os
+
+file_name = "Omron-2jcie-bu01-data.txt"
+
+home_dir = os.path.expanduser("~")
+
+file_path_desktop = os.path.join(home_dir, "Desktop", file_name)
+file_path_secret = os.path.join(home_dir, "Documents", "Robotek", file_name)
 
 s = Omron2JCIE_BU01.serial("COM3")
 
@@ -17,6 +25,8 @@ myLabel = Label(root, text="Lukk vinduet for å \n skru av Omron-sensor", font="
 myLabel.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 counter3 = 0
+
+print(os.path.getsize(file_path_secret))
 
 class Worker(threading.Thread):
     def __init__(self):
@@ -43,11 +53,12 @@ class Worker(threading.Thread):
             global worker_thread
             global run_program
             run_program = True
-            print(worker_thread.is_alive())
+            print(worker_thread.is_alive()) # dette er en print
             if counter2 > 0:
                 counter2 -= 1
             dt = datetime.now()
             time_now = dt.strftime('%H:%M:%S')
+            date = dt.strftime('%d/%m/%Y')
             info = s.latest_calculation_data()
             acc_x = abs(info.acc_x)
             acc_y = abs(info.acc_y)
@@ -68,6 +79,7 @@ class Worker(threading.Thread):
 
             if abs(acc_x - prev_acc_x) > 400 or abs(acc_y - prev_acc_y) > 400:
                 s.led(0x01, (255, 0, 0))
+                write_data(date, time_now)
                 counter2 = 10
             else:
                 if counter2 == 0:
@@ -94,9 +106,6 @@ class Worker(threading.Thread):
             time_now_list_2 = datetime.now().strftime('%H:%M:%S').split(":")
             time_now_list_2_int = [int(tall) for tall in time_now_list_2]
             
-            print(f"Tid nå: {time_now_list_2_int}")
-            print(f"Tid sove: {future_time}")
-
             if time_now_list_2_int == future_time:
                 continue
 
@@ -137,13 +146,33 @@ def exit():
     s.led(0x00, (255, 0, 0))
     sys.exit(0)
 
+def write_data(date, time_now):
+    first_line = "This document contains the time and date for when Omron 2JCIE-BU01 sensor registered a reading that exceeded the accepted limit - hence turning the led red"
+    with open(file_path_desktop, 'a+') as f1, open(file_path_secret, 'a+') as f2:
+        file_size_desktop = os.path.getsize(file_path_desktop)
+        file_size_secret = os.path.getsize(file_path_secret)
+        print(file_size_secret)
+        if file_size_desktop == 0:
+            f1.write(first_line)
+            f1.write('\n')
+            f1.write('\n')
+        if file_size_secret == 0:
+            f2.write(first_line)
+            f2.write('\n')
+            f2.write('\n')
+        f1.write(date + " at " + time_now)
+        f1.write('\n')
+        f2.write(date + " at " + time_now)
+        f2.write('\n')
+
 worker_thread = Worker()
 worker_thread.start()
 worker_thread.run_event.set()
 print("Program starter")
 run_program = False
 
-ico = Image.open(r"C:\icon.ico")
+image_path = file_path_secret = os.path.join(home_dir, "Documents", "Robotek", "icon.ico")
+ico = Image.open(image_path)
 photo = ImageTk.PhotoImage(ico)
 root.wm_iconphoto(False, photo)
 
