@@ -97,7 +97,7 @@ class Worker(threading.Thread):
                     f2.write(date + " at " + time_now)
                     f2.write('\n')
 
-                counter2 = 10
+                counter2 = 15
             else:
                 if counter2 == 0:
                     s.led(0x01, (0, 255, 0))
