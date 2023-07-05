@@ -2,10 +2,8 @@ from tkinter import *
 from PIL import Image, ImageTk
 from omron_2jcie_bu01_interact import Omron2JCIE_BU01
 import asyncio
-import atexit
-import keyboard
 import sys
-from datetime import datetime, timedelta, tzinfo
+from datetime import datetime, timedelta
 import threading
 import os
 import time
