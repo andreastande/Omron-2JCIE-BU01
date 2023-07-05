@@ -69,7 +69,7 @@ class Worker(threading.Thread):
                 counter += 1
                 continue
 
-            if abs(acc_x - prev_acc_x) > 400 or abs(acc_y - prev_acc_y) > 400:
+            if abs(acc_x - prev_acc_x) > 400 or abs(acc_y - prev_acc_y) > 400 or acc_x > 750 or acc_y > 750:
                 s.led(0x01, (255, 0, 0))
                 file_name = "Omron-2jcie-bu01-data.txt"
 
