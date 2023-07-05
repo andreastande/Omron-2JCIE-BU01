@@ -8,15 +8,15 @@ import sys
 from datetime import datetime, timedelta, tzinfo
 import threading
 import os
+import time
 
 
 s = Omron2JCIE_BU01.serial("COM3")
 
 root = Tk()
-root.iconify()
 
 myLabel = Label(root, text="Lukk vinduet for å \n skru av Omron-sensor", font="Futura 15")
-myLabel.place(relx=0.5, rely=0.5, anchor=CENTER)
+myLabel.place(relx=0.5, rely=0.3, anchor=CENTER)
 
 counter3 = 0
 
@@ -147,6 +147,7 @@ async def sleep_until(hour: int, minute: int, second: int):
         await asyncio.sleep((future - t).total_seconds())
 
 def exit():
+    # catch 2 exceptions i denne metoden: ValueError og OSError
     global worker_thread
     global run_program
     global counter3
@@ -159,6 +160,8 @@ def exit():
     print(worker_thread.is_alive())
     if worker_thread.is_alive():
         worker_thread.run_event.clear()
+        time.sleep(0.5)
+
     print("Program avsluttes")
     s.led(0x00, (255, 0, 0))
     sys.exit(0)
@@ -176,8 +179,14 @@ ico = Image.open(image_path)
 photo = ImageTk.PhotoImage(ico)
 root.wm_iconphoto(False, photo)
 
+exit_button = Button(root, text="Lukk", command=exit, bg="#eb4034", fg="white", font='bold', activebackground='#eb4034')
+exit_button.config(width="10")
+exit_button.place(relx=0.5, rely=0.65, anchor=CENTER)
+
 root.title("Omron 2JCIE-BU01")
-root.geometry("300x150")
+root.geometry("300x180")
+root.eval('tk::PlaceWindow . center')
+root.iconify()
 
 root.protocol("WM_DELETE_WINDOW", exit)
 
