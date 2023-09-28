@@ -1,7 +1,5 @@
 ﻿# OMRON 2JCIE-BU01
 
-- JAPANESE document is available: See README_ja.md
-
 ## Synopsis
 Module and sample code for obtaining data with OMRON 2JCIE-BU01 Environment Sensor by Python.
 The codes work with Python 3.6 and above. This module supports USB serial communication and BLE.
