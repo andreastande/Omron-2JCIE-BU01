@@ -30,11 +30,8 @@ class Worker(threading.Thread):
         global counter3
         if counter3 == 0:
             s.led(0x01, (0, 255, 0))
-        # info3 = s.latest_acceleration_status()
-        prev_time = ""
         prev_acc_x = 0
         prev_acc_y = 0
-        prev_acc_z = 0
         global counter
         counter = 0
         counter2 = 0
@@ -43,7 +40,6 @@ class Worker(threading.Thread):
             global worker_thread
             global run_program
             run_program = True
-            print(worker_thread.is_alive()) # dette er en print
             if counter2 > 0:
                 counter2 -= 1
             dt = datetime.now()
@@ -53,12 +49,6 @@ class Worker(threading.Thread):
             acc_x = abs(info.acc_x)
             acc_y = abs(info.acc_y)
             acc_z = abs(info.acc_z)
-
-            
-            # print(f'''
-            # Forrige målinger:        {prev_acc_x}, {prev_acc_y}, {prev_acc_z}
-            # Nåværende målinger:      {acc_x}, {acc_y}, {acc_z}
-            # ''')
 
             if counter == 0:
                 prev_acc_x = acc_x
@@ -80,8 +70,6 @@ class Worker(threading.Thread):
                 with open(file_path_desktop, 'a+') as f1, open(file_path_secret, 'a+') as f2:
                     file_size_desktop = os.path.getsize(file_path_desktop)
                     file_size_secret = os.path.getsize(file_path_secret)
-                    print(file_size_desktop)
-                    print(file_size_secret)
                     if file_size_desktop == 0:
                         f1.write(first_line)
                         f1.write('\n')
@@ -153,14 +141,11 @@ def exit():
         counter3 = 1
         worker_thread.run_event.set()
         s.led(0x00, (255, 0, 0))
-        print("Program avsluttes")
         sys.exit(0)
-    print(worker_thread.is_alive())
     if worker_thread.is_alive():
         worker_thread.run_event.clear()
         time.sleep(0.5)
 
-    print("Program avsluttes")
     s.led(0x00, (255, 0, 0))
     sys.exit(0)
 
@@ -172,7 +157,7 @@ print("Program starter")
 run_program = False
 
 home_dir = os.path.expanduser("~")
-image_path = file_path_secret = os.path.join(home_dir, "Documents", "Robotek", "icon.ico")
+image_path = os.path.join(home_dir, "Documents", "Robotek", "icon.ico")
 ico = Image.open(image_path)
 photo = ImageTk.PhotoImage(ico)
 root.wm_iconphoto(False, photo)
